@@ -188,7 +188,7 @@ function AlbumTabContent({
     if (!statusFilter.has(status)) return false
     if (!typeFilter.has(s.type)) return false
     return true
-  })
+  }).sort((a, b) => a.teamCode.localeCompare(b.teamCode))
 
   const selectedTeam = selectedTeamCode !== 'all' ? album.getTeamByCode(selectedTeamCode) : null
   const hasStatusFilter = statusFilter.size < 3
