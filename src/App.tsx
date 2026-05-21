@@ -5,6 +5,7 @@ import { useUserStickers } from './hooks/useUserStickers'
 import { Dashboard } from './components/dashboard/Dashboard'
 import { MatchFinder } from './components/matches/MatchFinder'
 import { AdminPanel } from './components/admin/AdminPanel'
+import { ExternalMatches } from './components/others/ExternalMatches'
 
 function LoginScreen({
   onLogin,
@@ -114,7 +115,7 @@ function LoginScreen({
   )
 }
 
-type Tab = 'album' | 'intercambios' | 'usuarios' | 'admin'
+type Tab = 'album' | 'intercambios' | 'usuarios' | 'admin' | 'otros'
 
 const TYPE_ICONS: Record<string, string> = {
   badge: '🛡️',
@@ -526,6 +527,7 @@ export default function App() {
   const tabs: { key: Tab; label: string; icon: string }[] = [
     { key: 'album', label: 'Album', icon: '📒' },
     { key: 'intercambios', label: 'Intercambios', icon: '🤝' },
+    { key: 'otros', label: 'Otros', icon: '📋' },
     { key: 'usuarios', label: 'Usuarios', icon: '👥' },
     { key: 'admin', label: 'Admin', icon: '⚙️' },
   ]
@@ -584,6 +586,7 @@ export default function App() {
           />
         )}
         {tab === 'intercambios' && <MatchFinder currentUser={auth.user} />}
+        {tab === 'otros' && <ExternalMatches currentUser={auth.user} userStickers={stickers.userStickers} />}
         {tab === 'usuarios' && <Dashboard currentUser={auth.user} />}
         {tab === 'admin' && <AdminPanel />}
       </div>
