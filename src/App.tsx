@@ -4,7 +4,6 @@ import { useAlbumData } from './hooks/useAlbumData'
 import { useUserStickers } from './hooks/useUserStickers'
 import { Dashboard } from './components/dashboard/Dashboard'
 import { MatchFinder } from './components/matches/MatchFinder'
-import { AdminPanel } from './components/admin/AdminPanel'
 import { ExternalMatches } from './components/others/ExternalMatches'
 import { generateExportText } from './lib/exportUtils'
 import { shareAsImage } from './lib/shareUtils'
@@ -117,7 +116,7 @@ function LoginScreen({
   )
 }
 
-type Tab = 'album' | 'intercambios' | 'usuarios' | 'admin' | 'otros'
+type Tab = 'album' | 'intercambios' | 'usuarios' | 'otros'
 
 const TYPE_ICONS: Record<string, string> = {
   badge: '🛡️',
@@ -147,7 +146,6 @@ function AlbumTabContent({
   const [selectedTeamCode, setSelectedTeamCode] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set(['owned', 'missing', 'duplicate']))
   const [typeFilter, setTypeFilter] = useState<Set<string>>(new Set(['badge', 'team_photo', 'player', 'intro', 'official_emblem', 'official_item', 'official_mascots', 'official_slogan', 'official_ball', 'host_country_emblem', 'world_cup_history']))
-  const [showImage, setShowImage] = useState(true)
   const [countrySearch, setCountrySearch] = useState('')
 
   const allTeams = useCallback(() => {
@@ -327,36 +325,12 @@ function AlbumTabContent({
           </div>
 
           <div className="space-y-2">
-            {selectedTeam.team.code === 'FWC' ? (
+            {selectedTeam.team.code === 'FWC' && (
               <div className="w-full bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 rounded-xl p-4 text-center shadow-md">
                 <span className="text-3xl block mb-1">🏆</span>
                 <span className="text-sm font-black text-yellow-900">FIFA World Cup 2026</span>
                 <p className="text-[10px] text-yellow-700 mt-0.5">Figuritas Especiales</p>
               </div>
-            ) : (
-              <>
-                <button
-                  onClick={() => setShowImage(!showImage)}
-                  className="w-full flex items-center justify-between px-3 py-1.5 bg-gray-100 rounded-lg text-xs font-semibold text-gray-500 hover:bg-gray-200 transition active:scale-[0.98]"
-                >
-                  <span>{showImage ? 'Ocultar pagina del album' : 'Mostrar pagina del album'}</span>
-                  <span className="text-gray-400">{showImage ? '▲' : '▼'}</span>
-                </button>
-
-                {showImage && (
-                  <div className="w-full max-w-lg mx-auto rounded-xl overflow-hidden shadow-lg border-2 border-gray-200 bg-white">
-                    <img
-                      src={`/teams/${selectedTeam.team.code}.jpeg`}
-                      alt={`Album ${selectedTeam.team.name}`}
-                      className="w-full h-auto block"
-                      loading="lazy"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none'
-                      }}
-                    />
-                  </div>
-                )}
-              </>
             )}
           </div>
 
@@ -594,7 +568,6 @@ export default function App() {
     { key: 'intercambios', label: 'Intercambios', icon: '🤝' },
     { key: 'otros', label: 'Otros', icon: '📋' },
     { key: 'usuarios', label: 'Usuarios', icon: '👥' },
-    { key: 'admin', label: 'Admin', icon: '⚙️' },
   ]
 
   const owned = stickers.stats.owned
@@ -653,7 +626,6 @@ export default function App() {
         {tab === 'intercambios' && <MatchFinder currentUser={auth.user} />}
         {tab === 'otros' && <ExternalMatches currentUser={auth.user} userStickers={stickers.userStickers} />}
         {tab === 'usuarios' && <Dashboard currentUser={auth.user} />}
-        {tab === 'admin' && <AdminPanel />}
       </div>
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-10">
