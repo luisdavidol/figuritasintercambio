@@ -49,7 +49,15 @@ function buildCatalog(): {
     for (const s of t.stickers) {
       const code = s.code.replace(/\s/g, '')
       const type = s.type === 'badge' ? 'escudo'
-        : s.type === 'team_photo' ? 'especial'
+        : s.type === 'team_photo' ? 'equipo_foto'
+        : s.type === 'intro' ? 'intro'
+        : s.type === 'official_emblem' ? 'emblema_oficial'
+        : s.type === 'official_item' ? 'item_oficial'
+        : s.type === 'official_mascots' ? 'mascotas'
+        : s.type === 'official_slogan' ? 'slogan'
+        : s.type === 'official_ball' ? 'balon_oficial'
+        : s.type === 'host_country_emblem' ? 'pais_anfitrion'
+        : s.type === 'world_cup_history' ? 'historia_mundial'
         : 'jugador'
 
       catalog.push({

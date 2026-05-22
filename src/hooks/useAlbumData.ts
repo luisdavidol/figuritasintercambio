@@ -11,7 +11,7 @@ export interface TeamInfo {
 export interface StickerInfo {
   position: number
   code: string
-  type: 'badge' | 'player' | 'team_photo'
+  type: 'badge' | 'player' | 'team_photo' | 'intro' | 'official_emblem' | 'official_item' | 'official_mascots' | 'official_slogan' | 'official_ball' | 'host_country_emblem' | 'world_cup_history'
   name: string
   teamCode: string
   teamName: string

@@ -31,9 +31,9 @@ describe('equipos.json album data', () => {
     expect(data.album).toBe('FIFA World Cup 2026 Panini')
   })
 
-  it('has 48 teams', () => {
-    expect(data.totalTeams).toBe(48)
-    expect(data.teams.length).toBe(48)
+  it('has 49 teams (48 countries + FWC specials)', () => {
+    expect(data.totalTeams).toBe(49)
+    expect(data.teams.length).toBe(49)
   })
 
   it('each team has exactly 20 stickers', () => {
@@ -42,8 +42,9 @@ describe('equipos.json album data', () => {
     }
   })
 
-  it('position 1 is always badge type with name "Escudo"', () => {
+  it('position 1 is always badge type with name "Escudo" (except FWC)', () => {
     for (const team of data.teams) {
+      if (team.team.code === 'FWC') continue
       const s = team.stickers.find((s) => s.position === 1)
       expect(s).toBeDefined()
       expect(s!.type).toBe('badge')
@@ -51,8 +52,9 @@ describe('equipos.json album data', () => {
     }
   })
 
-  it('position 13 is always team_photo type with name "Foto del equipo"', () => {
+  it('position 13 is always team_photo type with name "Foto del equipo" (except FWC)', () => {
     for (const team of data.teams) {
+      if (team.team.code === 'FWC') continue
       const s = team.stickers.find((s) => s.position === 13)
       expect(s).toBeDefined()
       expect(s!.type).toBe('team_photo')
@@ -60,8 +62,9 @@ describe('equipos.json album data', () => {
     }
   })
 
-  it('all positions 2-12 and 14-20 are player type with non-empty names', () => {
+  it('all positions 2-12 and 14-20 are player type with non-empty names (except FWC)', () => {
     for (const team of data.teams) {
+      if (team.team.code === 'FWC') continue
       for (const s of team.stickers) {
         if (s.position === 1 || s.position === 13) continue
         expect(s.type).toBe('player')
@@ -81,26 +84,28 @@ describe('equipos.json album data', () => {
         codes.add(normalized)
       }
     }
-    expect(codes.size).toBe(960)
+    expect(codes.size).toBe(980)
   })
 
   it('all team codes are unique', () => {
     const codes = new Set(data.teams.map((t) => t.team.code))
-    expect(codes.size).toBe(48)
+    expect(codes.size).toBe(49)
   })
 
-  it('all groups are A through L', () => {
+  it('has groups A through L plus FWC special section', () => {
     const groups = new Set(data.teams.map((t) => t.team.group))
-    const expected = new Set(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'])
+    const expected = new Set(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', '★'])
     expect(groups).toEqual(expected)
   })
 
-  it('each group has exactly 4 teams', () => {
+  it('each group has exactly 4 teams (except ★ which has 1)', () => {
     const groups = 'ABCDEFGHIJKL'.split('')
     for (const g of groups) {
       const teamsInGroup = data.teams.filter((t) => t.team.group === g)
       expect(teamsInGroup.length).toBe(4)
     }
+    const fwcGroup = data.teams.filter((t) => t.team.group === '★')
+    expect(fwcGroup.length).toBe(1)
   })
 
   it('every team has a non-empty federation', () => {

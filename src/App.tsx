@@ -121,6 +121,14 @@ const TYPE_ICONS: Record<string, string> = {
   badge: '🛡️',
   team_photo: '📸',
   player: '👤',
+  intro: '🎬',
+  official_emblem: '🏆',
+  official_item: '⭐',
+  official_mascots: '🦝',
+  official_slogan: '📝',
+  official_ball: '⚽',
+  host_country_emblem: '🌍',
+  world_cup_history: '📜',
 }
 
 function AlbumTabContent({
@@ -136,7 +144,7 @@ function AlbumTabContent({
 }) {
   const [selectedTeamCode, setSelectedTeamCode] = useState<string>('all')
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set(['owned', 'missing', 'duplicate']))
-  const [typeFilter, setTypeFilter] = useState<Set<string>>(new Set(['badge', 'team_photo', 'player']))
+  const [typeFilter, setTypeFilter] = useState<Set<string>>(new Set(['badge', 'team_photo', 'player', 'intro', 'official_emblem', 'official_item', 'official_mascots', 'official_slogan', 'official_ball', 'host_country_emblem', 'world_cup_history']))
   const [showImage, setShowImage] = useState(true)
   const [countrySearch, setCountrySearch] = useState('')
 
@@ -193,7 +201,7 @@ function AlbumTabContent({
 
   const selectedTeam = selectedTeamCode !== 'all' ? album.getTeamByCode(selectedTeamCode) : null
   const hasStatusFilter = statusFilter.size < 3
-  const hasTypeFilter = typeFilter.size < 3
+  const hasTypeFilter = typeFilter.size < 11
   const hasAnyFilter = hasStatusFilter || hasTypeFilter || selectedTeamCode === 'all'
   const showAlbumView = !hasAnyFilter && selectedTeam !== null
 
@@ -273,6 +281,14 @@ function AlbumTabContent({
           { key: 'badge', label: 'Escudos' },
           { key: 'team_photo', label: 'Eq. Completo' },
           { key: 'player', label: 'Jugadores' },
+          { key: 'intro', label: 'Intro' },
+          { key: 'official_emblem', label: 'Emblema' },
+          { key: 'official_item', label: 'Item' },
+          { key: 'official_mascots', label: 'Mascotas' },
+          { key: 'official_slogan', label: 'Slogan' },
+          { key: 'official_ball', label: 'Balon' },
+          { key: 'host_country_emblem', label: 'Anfitrion' },
+          { key: 'world_cup_history', label: 'Historia' },
         ].map(({ key, label }) => (
           <button
             key={key}
@@ -309,26 +325,36 @@ function AlbumTabContent({
           </div>
 
           <div className="space-y-2">
-            <button
-              onClick={() => setShowImage(!showImage)}
-              className="w-full flex items-center justify-between px-3 py-1.5 bg-gray-100 rounded-lg text-xs font-semibold text-gray-500 hover:bg-gray-200 transition active:scale-[0.98]"
-            >
-              <span>{showImage ? 'Ocultar pagina del album' : 'Mostrar pagina del album'}</span>
-              <span className="text-gray-400">{showImage ? '▲' : '▼'}</span>
-            </button>
-
-            {showImage && (
-              <div className="w-full max-w-lg mx-auto rounded-xl overflow-hidden shadow-lg border-2 border-gray-200 bg-white">
-                <img
-                  src={`/teams/${selectedTeam.team.code}.jpeg`}
-                  alt={`Album ${selectedTeam.team.name}`}
-                  className="w-full h-auto block"
-                  loading="lazy"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none'
-                  }}
-                />
+            {selectedTeam.team.code === 'FWC' ? (
+              <div className="w-full bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 rounded-xl p-4 text-center shadow-md">
+                <span className="text-3xl block mb-1">🏆</span>
+                <span className="text-sm font-black text-yellow-900">FIFA World Cup 2026</span>
+                <p className="text-[10px] text-yellow-700 mt-0.5">Figuritas Especiales</p>
               </div>
+            ) : (
+              <>
+                <button
+                  onClick={() => setShowImage(!showImage)}
+                  className="w-full flex items-center justify-between px-3 py-1.5 bg-gray-100 rounded-lg text-xs font-semibold text-gray-500 hover:bg-gray-200 transition active:scale-[0.98]"
+                >
+                  <span>{showImage ? 'Ocultar pagina del album' : 'Mostrar pagina del album'}</span>
+                  <span className="text-gray-400">{showImage ? '▲' : '▼'}</span>
+                </button>
+
+                {showImage && (
+                  <div className="w-full max-w-lg mx-auto rounded-xl overflow-hidden shadow-lg border-2 border-gray-200 bg-white">
+                    <img
+                      src={`/teams/${selectedTeam.team.code}.jpeg`}
+                      alt={`Album ${selectedTeam.team.name}`}
+                      className="w-full h-auto block"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none'
+                      }}
+                    />
+                  </div>
+                )}
+              </>
             )}
           </div>
 
@@ -342,7 +368,7 @@ function AlbumTabContent({
                 const dupCount = stickers.getDuplicateCount(sticker.code)
                 const isOwned = status === 'owned'
                 const isDupe = status === 'duplicate'
-                const config = { badge: 'bg-amber-50 border-amber-400', team_photo: 'bg-purple-50 border-purple-400', player: 'bg-blue-50 border-blue-400' } as Record<string, string>
+                const config = { badge: 'bg-amber-50 border-amber-400', team_photo: 'bg-purple-50 border-purple-400', player: 'bg-blue-50 border-blue-400', intro: 'bg-yellow-50 border-yellow-400', official_emblem: 'bg-yellow-50 border-yellow-400', official_item: 'bg-yellow-50 border-yellow-400', official_mascots: 'bg-yellow-50 border-yellow-400', official_slogan: 'bg-yellow-50 border-yellow-400', official_ball: 'bg-yellow-50 border-yellow-400', host_country_emblem: 'bg-yellow-50 border-yellow-400', world_cup_history: 'bg-yellow-50 border-yellow-400' } as Record<string, string>
 
                 return (
                   <button
