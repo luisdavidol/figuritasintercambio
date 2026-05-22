@@ -154,9 +154,8 @@ export function ExternalMatches({ currentUser, userStickers }: Props) {
                 : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-400'
           } ${disabled && !selected ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         >
-          <span className="font-mono font-bold">{info ? `#${info.position}` : '?'}</span>
-          <span className="text-[10px] text-gray-400 font-mono">{code}</span>
-          <span className="text-[9px] text-gray-400 ml-0.5 truncate max-w-16">{info?.country || ''}</span>
+          <span className="font-mono font-bold">{code}</span>
+          <span className="text-[9px] text-gray-400 ml-0.5 truncate max-w-24">{info?.playerName || ''}</span>
         </button>
         {onRemove && (
           <button
