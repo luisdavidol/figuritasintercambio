@@ -6,7 +6,6 @@ import { Dashboard } from './components/dashboard/Dashboard'
 import { MatchFinder } from './components/matches/MatchFinder'
 import { ExternalMatches } from './components/others/ExternalMatches'
 import { generateExportText } from './lib/exportUtils'
-import { shareAsImage } from './lib/shareUtils'
 
 function LoginScreen({
   onLogin,
@@ -505,8 +504,6 @@ export default function App() {
   )
 
   const [showCopied, setShowCopied] = useState(false)
-  const [showShareMenu, setShowShareMenu] = useState(false)
-  const [sharing, setSharing] = useState(false)
 
   const getExportText = useCallback(
     () => generateExportText(stickers.userStickers, album.allStickers),
@@ -515,7 +512,6 @@ export default function App() {
 
   const handleExportCopy = useCallback(async () => {
     const text = getExportText()
-    setShowShareMenu(false)
 
     if (navigator.share && navigator.canShare && navigator.canShare({ text })) {
       try {
@@ -535,23 +531,6 @@ export default function App() {
       alert('No se pudo copiar al portapapeles')
     })
   }, [getExportText])
-
-  const handleShareImage = useCallback(async () => {
-    setShowShareMenu(false)
-    setSharing(true)
-    const text = getExportText()
-    const missingCount = Math.max(0, album.allStickers.length - stickers.stats.owned - stickers.stats.totalDuplicates)
-    const duplicateCount = stickers.stats.totalDuplicates
-    try {
-      await shareAsImage(text, missingCount, duplicateCount)
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        alert('No se pudo compartir: ' + (e.message || 'error'))
-      }
-    } finally {
-      setSharing(false)
-    }
-  }, [getExportText, album.allStickers.length, stickers.stats])
 
   if (auth.loading || stickers.loading) {
     return (
@@ -659,36 +638,13 @@ export default function App() {
         </div>
       </nav>
 
-      <div className="fixed bottom-20 right-4 z-20 flex flex-col items-end gap-2">
-        {showShareMenu && (
-          <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-2 mb-1 min-w-44">
-            <button
-              onClick={handleExportCopy}
-              className="w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition flex items-center gap-2"
-            >
-              <span className="text-base">📋</span>
-              Compartir texto
-            </button>
-            <button
-              onClick={handleShareImage}
-              disabled={sharing}
-              className="w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition flex items-center gap-2 disabled:opacity-50"
-            >
-              <span className="text-base">{sharing ? '⏳' : '📱'}</span>
-              {sharing ? 'Generando...' : 'Compartir imagen'}
-            </button>
-          </div>
-        )}
-        <button
-          onClick={() => setShowShareMenu(!showShareMenu)}
-          className={`w-12 h-12 rounded-full shadow-lg active:scale-95 transition flex items-center justify-center ${
-            showShareMenu ? 'bg-gray-700 text-white' : 'bg-green-600 text-white hover:bg-green-700'
-          }`}
-          title="Exportar o compartir mi album"
-        >
-          <span className="text-xl">{showShareMenu ? '✕' : '📤'}</span>
-        </button>
-      </div>
+      <button
+        onClick={handleExportCopy}
+        className="fixed bottom-20 right-4 z-20 w-12 h-12 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 active:scale-95 transition flex items-center justify-center"
+        title="Compartir mi album"
+      >
+        <span className="text-xl">📤</span>
+      </button>
 
       {showCopied && (
         <div className="fixed bottom-36 right-4 z-20 bg-gray-800 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-lg animate-pulse">
