@@ -80,6 +80,9 @@ export function generateExportText(
 
   const lines: string[] = []
 
+  lines.push('App Figuritas del Boli (que nadie quiere usar)')
+  lines.push('---')
+  lines.push('')
   lines.push('Me faltan')
   const teamOrder = Array.from(new Set(allStickers.map((s) => s.teamCode)))
   for (const teamCode of teamOrder) {
