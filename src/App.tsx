@@ -6,6 +6,7 @@ import { Dashboard } from './components/dashboard/Dashboard'
 import { MatchFinder } from './components/matches/MatchFinder'
 import { AdminPanel } from './components/admin/AdminPanel'
 import { ExternalMatches } from './components/others/ExternalMatches'
+import { generateExportText } from './lib/exportUtils'
 
 function LoginScreen({
   onLogin,
@@ -528,6 +529,18 @@ export default function App() {
     [stickers]
   )
 
+  const [showCopied, setShowCopied] = useState(false)
+
+  const handleExportCopy = useCallback(() => {
+    const text = generateExportText(stickers.userStickers, album.allStickers)
+    navigator.clipboard.writeText(text).then(() => {
+      setShowCopied(true)
+      setTimeout(() => setShowCopied(false), 2500)
+    }).catch(() => {
+      alert('No se pudo copiar al portapapeles')
+    })
+  }, [stickers.userStickers, album.allStickers])
+
   if (auth.loading || stickers.loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -635,6 +648,20 @@ export default function App() {
           ))}
         </div>
       </nav>
+
+      <button
+        onClick={handleExportCopy}
+        className="fixed bottom-20 right-4 z-20 w-12 h-12 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 active:scale-95 transition flex items-center justify-center"
+        title="Copiar reporte de mi album"
+      >
+        <span className="text-xl">📤</span>
+      </button>
+
+      {showCopied && (
+        <div className="fixed bottom-36 right-4 z-20 bg-gray-800 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow-lg animate-pulse">
+          Copiado al portapapeles
+        </div>
+      )}
     </div>
   )
 }
