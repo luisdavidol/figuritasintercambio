@@ -513,11 +513,23 @@ export default function App() {
     [stickers.userStickers, album.allStickers]
   )
 
-  const handleExportCopy = useCallback(() => {
+  const handleExportCopy = useCallback(async () => {
     const text = getExportText()
+    setShowShareMenu(false)
+
+    if (navigator.share && navigator.canShare && navigator.canShare({ text })) {
+      try {
+        await navigator.share({ text, title: 'Figuritas del Boli' })
+        return
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          // fallback to clipboard
+        }
+      }
+    }
+
     navigator.clipboard.writeText(text).then(() => {
       setShowCopied(true)
-      setShowShareMenu(false)
       setTimeout(() => setShowCopied(false), 2500)
     }).catch(() => {
       alert('No se pudo copiar al portapapeles')
@@ -655,7 +667,7 @@ export default function App() {
               className="w-full text-left px-3 py-2.5 rounded-lg text-xs font-semibold text-gray-700 hover:bg-gray-100 transition flex items-center gap-2"
             >
               <span className="text-base">📋</span>
-              Copiar texto
+              Compartir texto
             </button>
             <button
               onClick={handleShareImage}

@@ -84,7 +84,8 @@ export function generateExportText(
   lines.push('---')
   lines.push('')
   lines.push('Me faltan')
-  const teamOrder = Array.from(new Set(allStickers.map((s) => s.teamCode)))
+  const teamCodes = Array.from(new Set(allStickers.map((s) => s.teamCode)))
+  const teamOrder = ['FWC', ...teamCodes.filter((c) => c !== 'FWC').sort((a, b) => a.localeCompare(b))]
   for (const teamCode of teamOrder) {
     const positions = missingGroups.get(teamCode)
     if (positions && positions.size > 0) {
