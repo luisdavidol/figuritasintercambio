@@ -562,9 +562,12 @@ export default function App() {
   ]
 
   const owned = stickers.stats.owned
+  const uniqueDupes = stickers.stats.duplicates
   const totalDupes = stickers.stats.totalDuplicates
   const totalStickers = album.allStickers.length
-  const missing = totalStickers - owned - totalDupes
+  const missing = totalStickers - owned - uniqueDupes
+  const pctOwned = totalStickers > 0 ? Math.round((owned / totalStickers) * 100) : 0
+  const pctMissing = totalStickers > 0 ? Math.round((missing / totalStickers) * 100) : 0
 
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
@@ -587,17 +590,17 @@ export default function App() {
             <div className="flex items-center gap-1">
               <span className="w-2.5 h-2.5 rounded-full bg-owned" />
               <span>{owned}</span>
-              <span className="text-gray-400">tengo</span>
+              <span className="text-gray-400">tengo ({pctOwned}%)</span>
             </div>
             <div className="flex items-center gap-1">
               <span className="w-2.5 h-2.5 rounded-full bg-duplicate" />
-              <span>{totalDupes}</span>
-              <span className="text-gray-400">repes</span>
+              <span>{uniqueDupes}</span>
+              <span className="text-gray-400">repes ({totalDupes} u.)</span>
             </div>
             <div className="flex items-center gap-1">
               <span className="w-2.5 h-2.5 rounded-full bg-gray-300" />
               <span>{Math.max(0, missing)}</span>
-              <span className="text-gray-400">faltan</span>
+              <span className="text-gray-400">faltan ({pctMissing}%)</span>
             </div>
             <span className="text-gray-300">|</span>
             <span className="text-gray-400">{totalStickers} total</span>
